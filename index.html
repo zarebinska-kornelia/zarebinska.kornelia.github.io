@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kornelia Zarebinska | Portfolio</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+</head>
+<body>
+  <header>
+    <img src="images/profile.jpeg" alt="my photo" class="profile-pic">
+    <h1>Kornelia Zarebinska</h1>
+    <p>ICT Student | Network Infrastructure | Cybersecurity Enthusiast</p>
+    <nav>
+      <ul>
+        <li><a href="#about">About</a></li>       
+        <li><a href="#Certificates">Certificates</a></li>
+        <li><a href="#projects">Projects</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section id="about">
+  <h2>About Me</h2>
+  <p>
+    I am an ICT student in semester 4, focusing on network infrastructure and 
+    fascinated by cybersecurity. This semester I am doing academic preparation 
+    to gain more theoretical knowledge about computers, and later pursue a master’s 
+    degree in research science. 
+    During summer I gained the ISC2 CC certificate, and now I am preparing for CompTia Security+ in October. 
+    I am looking for an internship which will take place next semester. 
+    This portfolio showcases my studies and projects.
+  </p>
+
+  <div class="contact-icons">
+  <a href="mailto:zarebinska.kornelia@gmail.com" title="Email">
+    <img src="images/email-icon.png" alt="Email">
+  </a>
+  <a href="https://github.com/zarebinska-kornelia" target="_blank" title="GitHub">
+    <img src="images/github-icon.png" alt="GitHub">
+  </a>
+  <a href="https://www.linkedin.com/in/kornelia-zarebinska/" target="_blank" title="LinkedIn">
+    <img src="images/linkedin-icon.png" alt="LinkedIn">
+  </a>
+</div>
+<div class="portfolio-links">
+  <a href="https://docs.google.com/document/d/1FA9nCd-uJ3AwYtTV0445wiZQ7cu55ZLM/edit?usp=sharing&ouid=104732211529850407984&rtpof=true&sd=true" target="_blank">
+    <img src="images/portfolio.png" alt="GitHub">
+    <span>Portfolio Report – Semester 2</span>
+  </a>
+  <a href="https://docs.google.com/document/d/1EUOxYhAQ9zm5klBdwKlSu9mRc5DRWyWw/edit?usp=sharing&ouid=104732211529850407984&rtpof=true&sd=true" target="_blank">
+    <img src="images/portfolio.png" alt="GitHub">
+    <span>Portfolio Report – Semester 3</span>
+  </a>
+</div>
+
+</section>
+
+
+
+
+  <section id="Certificates">
+    <h2>Certificates</h2>
+    <div class="project-card">
+      <h3>ISC2 CC</h3>
+      <p>Completed: August 2025</p>
+      <img src="images/CC-certificate.png" alt="ISC2 CC Certificate" class="certificate-img">
+    </div>
+    <div class="project-card">
+      <h3>CompTia Security+</h3>
+      <p>Planned: October 2025</p>
+    </div>
+</section>
+  
+    <section id="projects">
+    <h2>Projects</h2>
+    <div class="project-card">
+      <h3>Dropbox-like System on AWS</h3>
+      <p><strong>Goal:</strong> Create a cloud-based file sharing system, similar to Dropbox, using AWS services. Focus was on security, scalability, and keeping costs under control.</p>
+
+      <p><strong>My Role:</strong> I was responsible for planning the network and making diagrams, writing half of the Lambda functions in Python, setting up system monitoring with Grafana/Prometheus, and doing cost analysis. I worked in a group of 3 other students, using agile (daily scrums, Jira, rotating scrum master role).</p>
+
+      <p><strong>Technologies:</strong> AWS (S3, Lambda, DynamoDB, Cognito, Route 53, API Gateway, CloudFront, EC2, ACM), Terraform, Ansible, Python, Prometheus, Grafana, Jira.</p>
+
+      <img src="images/picture1.png" alt="Final version network diagram" class="project-img"><br>
+
+      <button class="toggle-btn">Show more</button>
+
+      <div class="extended-content">
+
+      <p><strong>How it works:</strong> Users log in through Cognito → API Gateway → Lambda → S3/DynamoDB. Route 53 and ACM are used for secure access. DynamoDB stores quotas and metadata, while S3 holds the files with pre-signed URLs. Everything is serverless for better scalability.</p>
+      <iframe src="https://drive.google.com/file/d/1whqknBx8b1KCEY1XxeGUiXIc_H0l3wJu/preview" 
+        width="700" height="400" 
+        allow="autoplay" 
+        class="project-video">
+      </iframe>
+
+
+      <p><strong>Diagrams:</strong> I made 3 versions before the final one. At first, I included a <em>VPN tunnel</em> between on-premises database and the cloud, plus Elastic Load Balancer, 2 regions with instances for high availability. Later, as a team, we decided to challenge ourselves and switch to fully serverless — that became our final design.</p>
+
+      <p><strong>Lambdas:</strong> I built and tested functions for user quotas, upload links, and usage stats.  
+        Main ones I worked on:  
+      </p>
+      <ul>
+        <li><code>request-upload</code> – checks quota, returns pre-signed S3 upload URL.</li>
+        <li><code>confirm-upload</code> – updates quota used + metadata in DynamoDB.</li>
+        <li><code>assign-user-quota</code> – validates org limits, updates Cognito + DynamoDB.</li>
+        <li><code>update-org-quota</code> – recalculates total usage for all users.</li>
+      </ul>
+
+      <p>One issue I found: even if a user was authenticated by Cognito, they didn’t always appear in our DB. I suggested a workaround Lambda that checks this during the first download request and adds the user if missing.</p>
+      <button class="toggle-btn">Show more</button>
+      <div class="extended-content">
+        <h4>Lambda Function: K-ASSIGNUSERQUOTA</h4>
+        <p>
+          This Lambda handles manual storage quota assignments when an admin sets a quota 
+          through the UI or backend API. It validates input, checks org-level limits, updates 
+          Cognito and DynamoDB, and initializes a personal storage folder in S3.  
+        </p>
+
+        <pre><code class="language-python">
+      import json
+import boto3
+from boto3.dynamodb.conditions import Attr
+
+dynamodb = boto3.resource('dynamodb')
+cognito = boto3.client('cognito-idp')
+
+USER_POOL_ID = 'eu-central-1_IEHwWyoEo'
+USER_TABLE = dynamodb.Table('K-UserQuotaTable')
+ORG_TABLE = dynamodb.Table('K-OrgQuotaTable')
+
+# cors added by Paul
+cors_headers = {
+    "Access-Control-Allow-Origin": "*"
+}
+
+def lambda_handler(event, context):
+    try:
+               
+        body = event.get('body', '{}')
+
+        if isinstance(body, str):
+            body = json.loads(body)
+
+        print("Parsed body:", body)
+        email = body.get('UserID')
+        org_id = body.get('OrgID')
+        quota_gb = int(body.get('QuotaGB') or 10)
+
+
+        if not email or not org_id or quota_gb <= 0:
+            return {
+                'statusCode': 400,
+                'headers': cors_headers,
+                'body': json.dumps({'message': 'Missing or invalid input'})
+            }
+
+        quota_bytes = quota_gb * pow(1024, 3)
+
+        org_record = ORG_TABLE.get_item(Key={'OrgID': org_id})
+        if 'Item' not in org_record:
+            return {
+                'statusCode': 404,
+                'headers': cors_headers,
+                'body': json.dumps({'message': 'Organization not found'})
+            }
+
+        org_max = org_record['Item']['MaxStorage']
+
+        response = USER_TABLE.scan(
+            FilterExpression=Attr('OrgID').eq(org_id)
+        )
+        existing_allocated = sum(u.get('QuotaAllocated', 0) for u in response['Items'])
+
+        if existing_allocated + quota_bytes > org_max:
+            return {
+                'statusCode': 403,
+                'headers': cors_headers,
+                'body': json.dumps({'message': 'Quota exceeds organization limit'})
+            }
+
+        user_info = cognito.admin_get_user(
+            UserPoolId=USER_POOL_ID,
+            Username=email
+        )
+        sub = user_info['sub']
+
+        cognito.admin_update_user_attributes(
+            UserPoolId=USER_POOL_ID,
+            Username=email,
+            UserAttributes=[
+                {
+                    'Name': 'custom:StorageQuota',
+                    'Value': str(quota_gb)
+                }
+            ]
+        )
+
+        USER_TABLE.put_item(Item={
+            'UserID': sub,
+            'OrgID': org_id,
+            'QuotaUsed': 0,
+            'QuotaAllocated': quota_bytes,
+            'UserName': email
+        })
+
+        s3 = boto3.client('s3')
+        bucket_name = 'org-dropbox-storage'  
+        user_path = f"{org_id}/{email}/"
+        s3.put_object(Bucket=bucket_name, Key=f"{user_path}.keep")
+
+
+        return {
+            'statusCode': 200,
+            'headers': cors_headers,
+            'body': json.dumps({'message': 'Quota assigned successfully'})
+        }
+
+    except Exception as e:
+        print("ERROR:", str(e))
+        return {
+            'statusCode': 500,
+            'headers': cors_headers,
+            'body': json.dumps({'message': 'Internal error', 'error': str(e)})
+        }
+
+        </code></pre>
+        <p><strong>Explanation:</strong>  
+          This Lambda assigns storage quotas to users:
+          <ul>
+            <li>Validates input (UserID, OrgID, QuotaGB).</li>
+            <li>Checks if new quota would exceed the org’s MaxStorage.</li>
+            <li>Updates DynamoDB (K-UserQuotaTable) and Cognito attributes.</li>
+            <li>Creates a personal storage folder in S3.</li>
+          </ul>
+        </p>
+      </div>
+
+      <p><strong>On-prem simulation:</strong> I created a separate VPC with EC2 + EBS volume to simulate company storage. Added NGINX dashboard with CRUD, put it behind CloudFront + ACM SSL cert for secure domain access. This way we had both S3 cloud storage and on-prem storage integrated.</p>
+
+      <p><strong>System monitoring:</strong> I installed Prometheus + node exporter on EC2, then visualized metrics in Grafana. This gave us dashboards for CPU, RAM, disk, network etc. Running locally on Docker I could scrape EC2 metrics and display them live.</p>
+
+      <img src="images/Grafana.png" alt="Grafana dashboard" class="project-img">
+      <img src="images/Prometheus.png" alt="Prometheus monitoring" class="project-img">
+
+      <p><strong>Outcome:</strong> We delivered a working file sharing system with quota control, secure authentication, monitoring, and cost optimization. It was also a good team experience with agile workflow.</p>
+
+      <p><strong>What I learned:</strong> how to design serverless cloud systems, write and connect multiple Lambda functions, balance performance with costs, and the importance of good diagrams + documentation for teamwork.</p>
+    </div>
+    </div>
+
+    <div class="project-card">
+  <h3>Fonteyn Park Hybrid Infrastructure</h3>
+  <p><strong>Goal:</strong> Together with my team, we were asked to design and modernize the IT infrastructure for Fonteyn Holiday Parks.  
+  The company had grown a lot but their systems were chaotic and decentralized.  
+  Our task was to redesign the network, migrate to the cloud, and make everything easier to manage, secure, and scalable.</p>
+
+  <p><strong>My Role:</strong> I was mostly responsible for setting up and configuring Linux servers, deploying websites (Apache + Nginx),  
+  handling IP addressing, and helping with the Azure migration. I also prepared research on VLANs and tested them in Packet Tracer,  
+  and I worked on presentations for the stakeholder to explain our migration plan and options.</p>
+
+  <p><strong>Technologies:</strong> Azure, VMware, Linux (Apache, Nginx), VLANs, OPNsense, Git, Scrum/Agile.</p>
+
+  <button class="toggle-btn">Show more</button>
+  <div class="extended-content">
+    <p><strong>How it works:</strong> The project sets up a cloud-based IT infrastructure for Fonteyn Holiday Parks in Microsoft Azure. It uses a secure network with a firewall (OPNsense) to separate trusted and untrusted zones. A Linux web server hosts the company’s website (built with Flask, nginx, and HTTPS), while a separate database server manages employee accounts, bookings, and income data.</p>
+      <video controls class="project-video">
+        <source src="videos/foteyn-demo.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    <p><strong>How we worked:</strong>  
+    We followed Agile with Scrum boards, sprint planning, and retrospectives. At first, our communication wasn’t great,  
+    but we introduced fixed stand-ups, Discord updates, and even a “yellow card rule” for accountability.  
+    Later sprints went much smoother, and we started to present in a way that was more customer-friendly instead of too technical.</p>
+
+    <p><strong>What we built:</strong></p>
+    <ul>
+      <li>Migrated services to Microsoft Azure with backups and monitoring to improve reliability.</li>
+      <li>Configured Linux servers with Apache and Nginx for websites and apps.</li>
+      <li>Researched and tested VLAN segmentation to separate traffic and improve security.</li>
+      <li>Explored hybrid solutions with Azure + VMware and firewalls like OPNsense.</li>
+      <li>Prepared stakeholder presentations with migration plans, cost analysis, and monitoring strategies.</li>
+    </ul>
+
+    <p><strong>Outcome:</strong> We delivered a working migration plan and prototypes for a more reliable and scalable system.  
+    The infrastructure was designed to remove unnecessary services, improve security, and centralize management.  </p>
+
+    <p><strong>What I learned:</strong>  
+    - How to apply VLANs and Azure migration in practice.  
+    - That communication in teams is just as important as the tech side.  
+    - How to adapt presentations depending on the audience (technical vs. stakeholder). </p>
+  </div>
+  <div class="portfolio-links">
+  <p>Find the project here</p> 
+  <a href="https://github.com/zarebinska-kornelia/semester2-group-project/tree/main" target="_blank" title="GitHub">
+    <img src="images/github-icon.png" alt="GitHub">
+  </a>
+</div>
+</div>
+<div class="project-card">
+  <h3>Café Network & Security Project</h3>
+  <p><strong>Goal:</strong> Build a secure and simple IT setup for a café.  
+  Customers should have their own Wi-Fi, employees a safe subnet, and a small server running an ordering web app.  
+  The idea was to improve customer service, reduce cashier load, and separate public and private systems.</p>
+
+  <p><strong>My Role:</strong> I worked individually on the whole setup: planning network design, building the infrastructure in VMware, creating the ordering app in Python (Flask + SQLite3), configuring firewall + IDS rules, and testing with security tools (SQLmap, Hydra, Nmap).</p>
+
+  <p><strong>Technologies:</strong> pfSense (firewall, Suricata IDS), VLANs, SQLite3, Python Flask, GitLab CI/CD, VMware, Linux, Hydra, SQLmap, Nmap.</p>
+
+  <button class="toggle-btn">Show more</button>
+  <div class="extended-content">
+
+    <p><strong>What I built:</strong></p>
+    <ul>
+      <li>Three subnets: 
+        <ul>
+          <li><em>Customer Wi-Fi</em> (internet + access to app only)</li>
+          <li><em>Cashier subnet</em> for internal use</li>
+          <li><em>Server subnet</em> with web app + database</li>
+        </ul>
+      </li>
+      <img src="images/cafe-diagram.png" alt="Cafe network architecture" class="project-img">
+      <li>Flask-based ordering system with SQLite3 (user login, hashed passwords, orders, join table for order items).</li>
+      <h4>Demo Video</h4>
+      <video controls class="project-video">
+        <source src="videos/cafe-demo.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <li>CI/CD with GitLab – every push deployed new version of the app automatically.</li>
+      <img src="images/cafe-deploy1.png" alt="CI/CD deploy" class="project-img">
+      <img src="images/cafe-deploy2.png" alt="CI/CD deploy" class="project-img">
+      <li>Firewall rules in pfSense to allow only needed traffic</li>
+      <img src="images/cafe-rules.png" alt="rules on pfsense" class="project-img">
+      <li>Suricata IDS to detect unusual traffic or brute force attempts.</li>
+      <img src="images/cafe-nmap.png" alt="Cafe nmap try" class="project-img">
+      <img src="images/cafe-posrScanned.png" alt="Scanned traffic" class="project-img">
+      <li>SQL injection attempt by using sqlmap. Prevent by using variables in code.</li>
+      <img src="images/cafe-sqlInjection.png" alt="SQLmap try" class="project-img">
+      <img src="images/cafe-code.png" alt="SQLmap try code which prevented" class="project-img">
+    </ul>
+
+    <p><strong>Testing:</strong></p>
+    <ul>
+      <li><em>Brute force:</em> Hydra to test weak credentials → fixed with rate limiting (max 5 tries per IP).</li>
+      <li><em>SQL injection:</em> SQLmap → fixed by using parameterized queries.</li>
+      <li><em>Port scans:</em> Nmap → Suricata triggered alerts correctly.</li>
+    </ul>
+
+    <p><strong>Outcome:</strong> Delivered a working café network prototype where customers could place orders via the app while employees stayed in a safe subnet.  
+    The system had IDS rules, VPN access, and firewall protection to block attacks.  
+    CI/CD made updating smooth, and tests showed it could resist SQL injection, brute force, and scanning attempts.</p>
+  </div>
+  <div class="portfolio-links">
+  <p>Find the project here</p> 
+  <a href="https://github.com/zarebinska-kornelia/semester2-individual-project" target="_blank" title="GitHub">
+    <img src="images/github-icon.png" alt="GitHub">
+  </a>
+</div>
+</div>
+
+  </section>
+
+  <footer>
+    <p>© 2025 Kornelia Zarebinska | Portfolio</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
